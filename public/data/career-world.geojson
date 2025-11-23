@@ -1,0 +1,243 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "career-island",
+      "properties": {
+        "kind": "world",
+        "name": "Career Island"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.98, 40.71], [-73.97, 40.72], [-73.96, 40.73], [-73.95, 40.72],
+          [-73.94, 40.71], [-73.95, 40.70], [-73.96, 40.69], [-73.97, 40.70],
+          [-73.98, 40.71]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "onboarding-forest",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "onboarding-forest",
+        "name": "Onboarding Forest"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.98, 40.71], [-73.97, 40.71], [-73.97, 40.72], [-73.98, 40.72], [-73.98, 40.71]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "martech-mountain",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "martech-mountain",
+        "name": "MarTech Mountain"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.96, 40.71], [-73.95, 40.71], [-73.95, 40.72], [-73.96, 40.72], [-73.96, 40.71]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "demand-gen-fields",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "demand-gen-fields",
+        "name": "Demand Gen Fields"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.98, 40.70], [-73.97, 40.70], [-73.97, 40.71], [-73.98, 40.71], [-73.98, 40.70]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "revops-forge",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "revops-forge",
+        "name": "RevOps Forge"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.96, 40.70], [-73.95, 40.70], [-73.95, 40.71], [-73.96, 40.71], [-73.96, 40.70]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "abm-kingdom",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "abm-kingdom",
+        "name": "ABM Kingdom"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.98, 40.69], [-73.97, 40.69], [-73.97, 40.70], [-73.98, 40.70], [-73.98, 40.69]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gtmstack-citadel",
+      "properties": {
+        "kind": "zone",
+        "zoneId": "gtmstack-citadel",
+        "name": "GTMstack Citadel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.96, 40.69], [-73.95, 40.69], [-73.95, 40.70], [-73.96, 40.70], [-73.96, 40.69]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "prgx-digital-abm",
+      "properties": {
+        "kind": "role",
+        "zoneId": "abm-kingdom",
+        "title": "Director of Digital Marketing & ABM",
+        "company": "PRGX Global",
+        "years": "2024–2025"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.975, 40.695] }
+    },
+    {
+      "type": "Feature",
+      "id": "amcs-abm-director",
+      "properties": {
+        "kind": "role",
+        "zoneId": "abm-kingdom",
+        "title": "Director of Account-Based Marketing",
+        "company": "AMCS Group",
+        "years": "2023–2024"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.965, 40.695] }
+    },
+    {
+      "type": "Feature",
+      "id": "redhat-abm",
+      "properties": {
+        "kind": "role",
+        "zoneId": "martech-mountain",
+        "title": "Senior Principal Program Manager, ABM",
+        "company": "Red Hat",
+        "years": "2021–2023"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.955, 40.715] }
+    },
+    {
+      "type": "Feature",
+      "id": "salesforce-ops",
+      "properties": {
+        "kind": "role",
+        "zoneId": "revops-forge",
+        "title": "Global Marketing Operations Practice Leader",
+        "company": "Salesforce",
+        "years": "2017–2021"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.955, 40.705] }
+    },
+    {
+      "type": "Feature",
+      "id": "salesforce-campaigns",
+      "properties": {
+        "kind": "role",
+        "zoneId": "demand-gen-fields",
+        "title": "Senior Manager, Enterprise Campaigns",
+        "company": "Salesforce",
+        "years": "2014–2017"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.975, 40.705] }
+    },
+    {
+      "type": "Feature",
+      "id": "getsatisfaction",
+      "properties": {
+        "kind": "role",
+        "zoneId": "demand-gen-fields",
+        "title": "Director of Demand Generation",
+        "company": "Get Satisfaction",
+        "years": "2012–2014"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.973, 40.703] }
+    },
+    {
+      "type": "Feature",
+      "id": "crowdfactory",
+      "properties": {
+        "kind": "role",
+        "zoneId": "demand-gen-fields",
+        "title": "Senior Manager, Marketing & Comms",
+        "company": "Crowd Factory",
+        "years": "2011–2012"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.972, 40.702] }
+    },
+    {
+      "type": "Feature",
+      "id": "embarcadero",
+      "properties": {
+        "kind": "role",
+        "zoneId": "demand-gen-fields",
+        "title": "Global Online Marketing Manager",
+        "company": "Embarcadero",
+        "years": "2008–2011"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.973, 40.707] }
+    },
+    {
+      "type": "Feature",
+      "id": "salemglobal",
+      "properties": {
+        "kind": "role",
+        "zoneId": "onboarding-forest",
+        "title": "Senior Manager, Online Marketing",
+        "company": "SalemGlobal",
+        "years": "2006–2008"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.976, 40.715] }
+    },
+    {
+      "type": "Feature",
+      "id": "standard-poors",
+      "properties": {
+        "kind": "role",
+        "zoneId": "onboarding-forest",
+        "title": "LMS Strategist",
+        "company": "S&P",
+        "years": "2003–2005"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.977, 40.718] }
+    },
+    {
+      "type": "Feature",
+      "id": "bank-tokyo",
+      "properties": {
+        "kind": "role",
+        "zoneId": "revops-forge",
+        "title": "Business Analyst",
+        "company": "BTM",
+        "years": "2005–2006"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.955, 40.703] }
+    },
+    {
+      "type": "Feature",
+      "id": "gtmstack-role",
+      "properties": {
+        "kind": "role",
+        "zoneId": "gtmstack-citadel",
+        "title": "GTM Architect & Consultant",
+        "company": "GTMstack",
+        "years": "Ongoing"
+      },
+      "geometry": { "type": "Point", "coordinates": [-73.965, 40.695] }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+Apply this patch:
+
+--- a/components/TrailCard.tsx
++++ b/components/TrailCard.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+
+-import React from "react";
++import React from "react";
+
+ export const LAND_THEMES: Record<string, { name: string; color: string; icon: string }> = {
+   "martech-mountain": {
+@@
+ interface TrailCardProps {
+   id: string | number;
+   title: string;
+@@
+ export default function TrailCard({ id, title, company, years, location, summary, zoneId, onClick }: TrailCardProps) {
+   const theme = LAND_THEMES[zoneId] ?? {
+     name: "Unknown Land",
+-    color: "#94a3b8",
++    color: "#94a3b8",
+     icon: "⭐",
+   };
+
+   return (
+-    <div
+-      onClick={onClick}
+-      className="cursor-pointer rounded-2xl p-4 shadow-md border transition hover:scale-[1.01] bg-white mb-4"
+-      style={{ borderLeft: `8px solid ${theme.color}` }}
+-    >
+-      <div className="flex items-center mb-2 gap-2">
+-        <span style={{ fontSize: "1.5rem" }}>{theme.icon}</span>
+-        <h3 className="text-xl font-bold">{title}</h3>
+-      </div>
+-
+-      <p className="text-sm text-gray-600 font-medium">{company}</p>
+-      <p className="text-sm text-gray-600">{years}</p>
+-
+-      {location && <p className="text-sm text-gray-500">📍 {location}</p>}
+-
+-      {summary && <p className="mt-2 text-gray-700 text-sm leading-relaxed">{summary}</p>}
+-
+-      <div className="mt-3 inline-block px-3 py-1 text-xs font-semibold rounded-full text-white" style={{ backgroundColor: theme.color }}>
+-        {theme.name}
+-      </div>
+-    </div>
++    <div
++      onClick={onClick}
++      className="cursor-pointer rounded-2xl p-3 shadow-sm hover:shadow-md border transition bg-white mb-4 hover:scale-[1.01]"
++      style={{ borderLeft: `4px solid ${theme.color}` }}
++    >
++      <div className="flex items-center mb-1.5 gap-1.5">
++        <span style={{ fontSize: "1.25rem" }}>{theme.icon}</span>
++        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
++      </div>
++
++      <p className="text-sm text-gray-600 font-medium">{company}</p>
++      <p className="text-sm text-gray-600">{years}</p>
++
++      {location && (
++        <p className="text-sm text-gray-500 mt-0.5">📍 {location}</p>
++      )}
++
++      {summary && (
++        <p className="mt-2 text-gray-700 text-sm leading-relaxed">{summary}</p>
++      )}
++
++      <div
++        className="mt-3 inline-block px-2 py-0.5 text-[0.7rem] font-medium rounded-md text-white"
++        style={{ backgroundColor: theme.color }}
++      >
++        {theme.name}
++      </div>
++    </div>
+   );
+ }

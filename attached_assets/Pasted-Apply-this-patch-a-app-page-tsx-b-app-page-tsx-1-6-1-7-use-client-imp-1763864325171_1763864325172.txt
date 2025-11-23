@@ -1,0 +1,78 @@
+Apply this patch:
+
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -1,6 +1,7 @@
+ "use client";
+
+ import React, { useState, useEffect, useCallback } from "react";
++import clsx from "clsx";
+ import dynamic from "next/dynamic";
+ import mapboxgl from "mapbox-gl";
+ import { fetchAttractions } from "@/lib/fetchAttractions";
+@@
+   return (
+-    <div className="flex h-screen w-full flex-col">
++    <div className="flex h-screen w-full flex-col bg-gray-100">
+       {/* Top search bar */}
+-      <div className="border-b bg-white p-4 shadow-sm z-20">
+-        <div className="mx-auto max-w-5xl flex items-center gap-4">
++      <div className="border-b bg-white p-4 shadow-sm z-20 relative">
++        <div className="mx-auto max-w-5xl flex items-center gap-4 px-2">
+           <input
+             type="text"
+             placeholder="Search roles, companies, lands..."
+@@
+       <div className="flex flex-1 overflow-hidden w-full">
+         {/* Left Career Trail */}
+-        <div className="w-[420px] overflow-y-auto border-r bg-gray-50 p-4">
+-          {filtered.map((role) => (
+-            <TrailCard
+-              key={role.id}
+-              id={role.id}
+-              title={role.title}
+-              company={role.company ?? ""}
+-              years={role.years ?? ""}
+-              location={role.location}
+-              summary={role.summary}
+-              zoneId={role.zoneId}
+-              onClick={() => focusRole(role)}
+-            />
+-          ))}
++        <div className="w-[400px] overflow-y-auto border-r bg-gray-50 p-4 space-y-4 shadow-inner">
++          {filtered.map((role) => (
++            <div key={role.id} className="px-1">
++              <TrailCard
++                id={role.id}
++                title={role.title}
++                company={role.company ?? ""}
++                years={role.years ?? ""}
++                location={role.location}
++                summary={role.summary}
++                zoneId={role.zoneId}
++                onClick={() => focusRole(role)}
++              />
++            </div>
++          ))}
+         </div>
+
+         {/* Right Map */}
+-        <div className="relative flex-1">
+-          <DynamicMap ref={mapRef} attractions={filtered} />
+-
+-          {/* Floating MiniMap */}
+-          <div className="absolute bottom-4 right-4 h-40 w-40 rounded-xl overflow-hidden border bg-white shadow-xl">
+-            <MiniMap attractions={filtered} />
+-          </div>
++        <div className="relative flex-1 min-w-0">
++          <div className="absolute inset-0">
++            <DynamicMap ref={mapRef} attractions={filtered} />
++          </div>
++
++          {/* Floating MiniMap */}
++          <div className="absolute bottom-5 right-5 h-40 w-40 rounded-xl overflow-hidden border bg-white shadow-xl">
++            <MiniMap attractions={filtered} />
++          </div>
+         </div>
+       </div>
+     </div>

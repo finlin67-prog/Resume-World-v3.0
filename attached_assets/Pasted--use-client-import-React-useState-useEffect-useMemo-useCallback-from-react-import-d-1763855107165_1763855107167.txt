@@ -1,0 +1,191 @@
+"use client";
+
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
+import { Loader2 } from "lucide-react";
+import { fetchAttractions } from "@/lib/fetchAttractions";
+import { Attraction, FilterState } from "@/types/attractions";
+import mapboxgl from "mapbox-gl";
+
+// Load Map dynamically (no SSR)
+const DynamicMap = dynamic(() => import("@/components/Map"), { ssr: false });
+const MiniMap = dynamic(() => import("@/components/MiniMap"), { ssr: false });
+import AttractionCard from "@/components/AttractionCard";
+
+// Utility—keep consistent with Map.tsx
+function extractCoords(a: any): [number, number] {
+  if (typeof a.lat === "number" && typeof a.lng === "number")
+    return [a.lng, a.lat];
+  if (Array.isArray(a.coordinates)) return a.coordinates;
+  if (a.geometry?.coordinates) return a.geometry.coordinates;
+  throw new Error("Invalid coordinates for attraction");
+}
+
+export default function AttractionsPage() {
+  // Core State
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const [filtered, setFiltered] = useState<Attraction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // UI State
+  const [sortOption, setSortOption] = useState<"rating" | "name">("rating");
+
+  // Filters
+  const [filters, setFilters] = useState<FilterState>({
+    query: "",
+    minRating: 0,
+    category: "all",
+  });
+
+  // Map reference
+  const [map, setMap] = useState<any | null>(null);
+  const mapRef = useCallback((instance: any) => {
+    setMap(instance);
+  }, []);
+
+  // Fetch data
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await fetchAttractions();
+        setAttractions(data);
+      } catch (err) {
+        setError("Failed to load attractions.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  // Filtering
+  useEffect(() => {
+    let results = attractions;
+
+    if (filters.query) {
+      const q = filters.query.toLowerCase();
+      results = results.filter((a) => a.name.toLowerCase().includes(q));
+    }
+
+    if (filters.minRating > 0) {
+      results = results.filter((a) => a.rating! >= filters.minRating);
+    }
+
+    if (filters.category !== "all") {
+      results = results.filter((a) => a.category === filters.category);
+    }
+
+    setFiltered(results);
+  }, [attractions, filters]);
+
+  // Sorting
+  const sorted = useMemo(() => {
+    const copy = [...filtered];
+    if (sortOption === "rating") copy.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    if (sortOption === "name") copy.sort((a, b) => a.name.localeCompare(b.name));
+    return copy;
+  }, [filtered, sortOption]);
+
+  // Map: fit bounds to filtered
+  useEffect(() => {
+    if (!map || !filtered.length) return;
+
+    const bounds = new mapboxgl.LngLatBounds();
+
+    filtered.forEach((a) => {
+      try {
+        const coords = extractCoords(a);
+        bounds.extend(coords);
+      } catch {}
+    });
+
+    if (!bounds.isEmpty()) {
+      map.fitBounds(bounds, { padding: 60, maxZoom: 14 });
+    }
+  }, [map, filtered]);
+
+  // Handlers
+  const handleSearch = (value: string) => {
+    setFilters((prev) => ({ ...prev, query: value }));
+  };
+
+  const handleSortChange = (option: "rating" | "name") => {
+    setSortOption(option);
+  };
+
+  const focusAttraction = (a: Attraction) => {
+    if (!map) return;
+    try {
+      const coords = extractCoords(a);
+      map.flyTo({ center: coords, zoom: 15, speed: 1.1 });
+    } catch {}
+  };
+
+  return (
+    <div className="flex h-screen w-full flex-col">
+
+      {/* Top Controls */}
+      <div className="z-20 border-b bg-white p-4 shadow-sm">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
+          <input
+            type="text"
+            placeholder="Search attractions..."
+            className="w-full rounded-xl border px-4 py-2 shadow-sm"
+            value={filters.query}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+
+          <select
+            className="rounded-xl border px-3 py-2 shadow-sm"
+            value={sortOption}
+            onChange={(e) => handleSortChange(e.target.value as any)}
+          >
+            <option value="rating">Top Rated</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex w-full flex-1 overflow-hidden">
+
+        {/* LEFT LIST */}
+        <div className="w-[420px] overflow-y-auto border-r bg-gray-50 p-4">
+          {loading && (
+            <div className="flex items-center justify-center py-10 text-gray-500">
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading...
+            </div>
+          )}
+
+          {!loading && sorted.length === 0 && (
+            <div className="py-10 text-center text-gray-500">
+              No attractions found.
+            </div>
+          )}
+
+          {sorted.map((a) => (
+            <div key={a.id} className="mb-4">
+              <AttractionCard
+                title={a.name}
+                image={a.image ?? ""}
+                location={a.location ?? ""}
+                rating={a.rating}
+                onClick={() => focusAttraction(a)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT MAP */}
+        <div className="relative flex-1">
+          <DynamicMap ref={mapRef} attractions={sorted} />
+
+          <div className="absolute bottom-4 right-4 h-40 w-40 overflow-hidden rounded-xl border bg-white shadow-xl">
+            <MiniMap attractions={sorted} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

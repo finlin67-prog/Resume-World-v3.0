@@ -1,0 +1,157 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import mapboxgl from "mapbox-gl";
+
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
+
+interface MapProps {
+  attractions: any[];
+  small?: boolean;
+  onMapReady?: (map: mapboxgl.Map) => void;
+}
+
+// Utility: safely extract coordinates from multiple possible formats
+function extractCoords(a: any): [number, number] {
+  if (typeof a.lat === "number" && typeof a.lng === "number") {
+    return [a.lng, a.lat];
+  }
+  if (Array.isArray(a.coordinates)) {
+    return a.coordinates as [number, number];
+  }
+  if (a.geometry?.coordinates) {
+    return a.geometry.coordinates as [number, number];
+  }
+  throw new Error("Invalid coordinates");
+}
+
+export default function Map({ attractions, small, onMapReady }: MapProps) {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+
+  useEffect(() => {
+    if (!mapContainer.current) return;
+
+    const map = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/navigation-night-v1",
+      center: [-98.5795, 39.8283],
+      zoom: small ? 1.5 : 3,
+      pitch: 45,
+      bearing: 0,
+      antialias: true,
+    });
+
+    mapRef.current = map;
+
+    if (!small) {
+      map.on("load", () => {
+        // Disney-style pastel land + soft contours
+        if (map.getLayer("land")) {
+          map.setPaintProperty("land", "background-color", "#d8e8c8");
+        }
+        // Soft pastel water
+        if (map.getLayer("water")) {
+          map.setPaintProperty("water", "fill-color", "#b3d4f5");
+        }
+        // Crisp Universal-style boundary lines
+        if (map.getLayer("admin-0-boundary")) {
+          map.setPaintProperty("admin-0-boundary", "line-color", "#5f5f5f");
+        }
+        if (map.getLayer("admin-1-boundary")) {
+          map.setPaintProperty("admin-1-boundary", "line-color", "#6b7280");
+        }
+        // Attraction marker glow
+        
+        map.setFog({
+          range: [0.5, 10],
+          color: "#dbeafe",
+          "high-color": "#bfdbfe",
+          "space-color": "#93c5fd",
+          "horizon-blend": 0.02
+        });
+      });
+    }
+
+    if (onMapReady) {
+      map.on("load", () => onMapReady(map));
+    }
+
+    return () => {
+      map.remove();
+    };
+  }, [small, onMapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !attractions || attractions.length === 0) return;
+
+    map.on("load", () => {
+      attractions.forEach((a) => {
+        try {
+          const coords = extractCoords(a);
+          new mapboxgl.Marker({
+              element: (() => {
+                const el = document.createElement('div');
+                const land = a.zoneId || a.theme?.id;
+                const color = {
+                  "martech-mountain": "#0d9488",
+                  "revops-forge": "#475569",
+                  "abm-kingdom": "#7c3aed",
+                  "demandgen-fields": "#16a34a"
+                }[land] || "#ec4899";
+
+                el.style.width = '22px';
+                el.style.height = '22px';
+                el.style.borderRadius = '50%';
+                el.style.background = color;
+                el.style.boxShadow = `0 0 12px ${color}AA, 0 0 20px ${color}66`;
+                el.style.border = '3px solid white';
+                el.style.transition = 'transform 0.3s ease';
+
+                // Bounce animation
+                el.animate([
+                  { transform: 'scale(0)' },
+                  { transform: 'scale(1.2)' },
+                  { transform: 'scale(1)' }
+                ], {
+                  duration: 500,
+                  easing: 'ease-out'
+                });
+
+                el.onmouseenter = () => {
+                  el.style.transform = 'scale(1.25)';
+                };
+                el.onmouseleave = () => {
+                  el.style.transform = 'scale(1)';
+                };
+
+                return el;
+              })()
+            })
+            .setLngLat(coords)
+            .addTo(map);
+        } catch {}
+      });
+    });
+
+    const bounds = new mapboxgl.LngLatBounds();
+    attractions.forEach((a) => {
+      try {
+        const coords = extractCoords(a);
+        bounds.extend(coords);
+      } catch {}
+    });
+
+    if (!small && !bounds.isEmpty()) {
+      map.fitBounds(bounds, { padding: 60, maxZoom: 14 });
+    }
+  }, [attractions, small]);
+
+  return (
+    <div
+      ref={mapContainer}
+      className={small ? "h-full w-full" : "h-full w-full rounded-xl"}
+    />
+  );
+}
